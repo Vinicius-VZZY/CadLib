@@ -3,29 +3,23 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 livros = [
-    {
-        'id': 1,
-        'titulo': 'Livro1',
-        'autor': 'Autor1'
-    },
-    {
-        'id': 2, 'titulo':
-        'Livro2',
-        'autor': 'Autor2'
-    },
-    {
-        'id': 3,
-        'titulo': 'Livro3',
-        'autor': 'Autor3'
-    }
+    {'id': 1, 'titulo': 'Livro1', 'autor': 'Autor1'},
+    {'id': 2, 'titulo': 'Livro2', 'autor': 'Autor2'},
+    {'id': 3, 'titulo': 'Livro3', 'autor': 'Autor3'}
 ]
 
 @app.route('/livros', methods=['GET'])
 def consultar_livros():
     return jsonify(livros)
 
+@app.route('/livros/<int:id>', methods=['GET'])
+def consultar_livros_por_id(id):
+    for livro in livros:
+        if livro.get('id') == id:
+            return jsonify(livro)
+
 @app.route('/livros', methods=['POST'])
-def cadastrar_livro():
+def criar_livro():
     novo_livro = request.get_json()
     livros.append(novo_livro)
     return jsonify(livros)
@@ -45,4 +39,5 @@ def excluir_livro_por_id(id):
             del livros[indice]
             return jsonify(livros)
 
-app.run(host='localhost', port=8080, debug=True)
+if __name__ == '__main__':
+    app.run(host='localhost', port=8080, debug=True)
